@@ -1,17 +1,18 @@
+import React, { useEffect } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 import { useAppDispatch, useAppSelector } from "../../store/store";
 
-import { useEffect } from "react";
 import {
   getArticlesToStore,
-  setCurrentPage,
+  getNewsToStore,
+  setPaginationData,
 } from "../../store/reducers/blogologoReducer/actions";
 import { limit } from "../../constants/constants";
 
 const PaginationComponent: React.FC = () => {
-  const { count, currentPage } = useAppSelector(
+  const { count, currentPage, view, articles, news } = useAppSelector(
     (state) => state.blogologoReducer
   );
   const dispatch = useAppDispatch();
@@ -20,11 +21,22 @@ const PaginationComponent: React.FC = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    dispatch(setCurrentPage(value));
+    dispatch(setPaginationData(count, value));
+
+    if (view === "articles") {
+      dispatch(getArticlesToStore(value));
+    } else {
+      dispatch(getNewsToStore(value));
+    }
   };
+
   useEffect(() => {
-    dispatch(getArticlesToStore(currentPage));
-  }, [dispatch, currentPage]);
+    if (view === "articles" && articles.length === 0) {
+      dispatch(getArticlesToStore(currentPage));
+    } else if (view === "news" && news.length === 0) {
+      dispatch(getNewsToStore(currentPage));
+    }
+  }, [dispatch, currentPage, articles, news, view]);
 
   return (
     <Stack spacing={2}>

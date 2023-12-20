@@ -1,14 +1,14 @@
 import { Box } from "@mui/material";
-import { AtriclesProps } from "../../models/BlogologoProps";
+import { BlogProps } from "../../models/BlogologoProps";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
 
-type ArticlesCardProps = {
-  articles: AtriclesProps;
+type CardProps = {
+  props: BlogProps;
 };
 
-const ArticlesCard: React.FC<ArticlesCardProps> = ({ articles }) => {
-  const { id, title, image_url, published_at } = articles;
+const Card: React.FC<CardProps> = ({ props }) => {
+  const { id, title, image_url, published_at } = props;
   const formattedDate = format(new Date(published_at), "LLL dd, yyyy", {
     locale: enUS,
   });
@@ -79,4 +79,4 @@ const ArticlesCard: React.FC<ArticlesCardProps> = ({ articles }) => {
   );
 };
 
-export default ArticlesCard;
+export default Card;

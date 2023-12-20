@@ -1,25 +1,28 @@
 import { Dispatch } from "react";
-import { AnyAction, AtriclesProps } from "../../../models/BlogologoProps";
+import { AnyAction, BlogProps } from "../../../models/BlogologoProps";
 import { BlogReducerEnum } from "./actionTypes";
-import { getAtricles } from "../../../api/services/BlogologoServices/BlogologoServices";
+import {
+  getAtricles,
+  getNews,
+} from "../../../api/services/BlogologoServices/BlogologoServices";
 
-export const setAtricles = (articles: AtriclesProps[]) => {
-  console.log(articles, "action");
+export const setAtricles = (articles: BlogProps[]) => {
   return { type: BlogReducerEnum.SET_ARTICLES, payload: articles };
 };
-
-export const setCountOfArticles = (countOfArticles: number) => {
-  console.log(countOfArticles, "SET_COUNT_OF_ARTICLES");
-  return {
-    type: BlogReducerEnum.SET_COUNT_OF_ARTICLES,
-    payload: countOfArticles,
-  };
+export const setNews = (news: BlogProps[]) => {
+  return { type: BlogReducerEnum.SET_NEWS, payload: news };
 };
 
-export const setCurrentPage = (page: number) => {
+export const setPaginationData = (count: number, currentPage: number) => {
   return {
-    type: BlogReducerEnum.SET_CURRENT_PAGE,
-    payload: page,
+    type: BlogReducerEnum.SET_PAGINATION_DATA,
+    payload: { count, currentPage },
+  };
+};
+export const setView = (view: string) => {
+  return {
+    type: BlogReducerEnum.SET_VIEW,
+    payload: view,
   };
 };
 
@@ -28,7 +31,15 @@ export const getArticlesToStore = (page: number = 1) => {
     const [dataArticles] = await Promise.all([getAtricles(page)]);
     const { count, results } = dataArticles;
     dispatch(setAtricles(results));
-    dispatch(setCountOfArticles(count));
-    dispatch(setCurrentPage(page));
+    dispatch(setPaginationData(count, page));
+  };
+};
+
+export const getNewsToStore = (page: number = 1) => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    const [dataNews] = await Promise.all([getNews(page)]);
+    const { count, results } = dataNews;
+    dispatch(setNews(results));
+    dispatch(setPaginationData(count, page));
   };
 };

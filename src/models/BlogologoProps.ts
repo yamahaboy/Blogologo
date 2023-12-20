@@ -1,9 +1,9 @@
 export type BlogologoProps = {
   count: number;
-  results: AtriclesProps[];
+  results: BlogProps[];
 };
 
-export type AtriclesProps = {
+export type BlogProps = {
   id: number;
   title: string;
   image_url: string;
