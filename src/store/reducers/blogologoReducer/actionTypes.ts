@@ -3,4 +3,5 @@ export enum BlogReducerEnum {
   SET_NEWS = "SET_NEWS",
   SET_PAGINATION_DATA = "SET_PAGINATION_DATA",
   SET_VIEW = "SET_VIEW",
+  SET_SEARCH = "SET_SEARCH",
 }

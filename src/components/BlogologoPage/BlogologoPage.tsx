@@ -2,28 +2,24 @@ import React, { useEffect } from "react";
 import { Box, Grid } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
-  getArticlesToStore,
-  getNewsToStore,
+  getDataToStore,
   setView,
 } from "../../store/reducers/blogologoReducer/actions";
 import ArticlesCard from "../ArticlesCard/ArticlesCard";
-import Footer from "../Footer/Footer";
 import PaginationComponent from "../Pagination/Pagination";
 import { BlogProps } from "../../models/BlogologoProps";
 
 const BlogologoPage: React.FC = () => {
-  const { articles, news, view } = useAppSelector(
+  const { articles, news, view, newSearch, searching, count } = useAppSelector(
     (state) => state.blogologoReducer
   );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (view === "articles") {
-      dispatch(getArticlesToStore(1));
-    } else {
-      dispatch(getNewsToStore(1));
+    if (!searching) {
+      dispatch(getDataToStore(view, 1));
     }
-  }, [dispatch, view]);
+  }, [dispatch, view, searching]);
 
   const handleViewChange = (newView: string) => {
     dispatch(setView(newView));
@@ -37,7 +33,6 @@ const BlogologoPage: React.FC = () => {
         height: "auto",
         display: "flex",
         flexDirection: "column",
-        marginTop: "10%",
       }}
     >
       <Box
@@ -48,7 +43,7 @@ const BlogologoPage: React.FC = () => {
           marginBottom: "5%",
           gap: "40px",
           width: "100%",
-          borderBottom: "1px solid #313037",
+          borderBottom: !searching ? "1px solid #313037" : "none",
         }}
       >
         <Box
@@ -58,73 +53,111 @@ const BlogologoPage: React.FC = () => {
             fontWeight: "700",
           }}
         >
-          Blog
+          {searching ? `Search Results: ${newSearch}` : "Blog"}
         </Box>
+        {!searching && count === 0 && (
+          <Box
+            sx={{
+              fontSize: "16px",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: "600",
+              color: "#777",
+              marginBottom: "20px",
+            }}
+          >
+            No results found.
+          </Box>
+        )}
+        {!searching && count > 0 && (
+          <Box
+            sx={{
+              width: "8.8rem",
+              height: "3rem",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                fontSize: "16px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: "600",
+                cursor: "pointer",
+                color: view === "articles" ? "#000" : "#777",
+                borderBottom:
+                  view === "articles" ? "4px solid #313037 " : "none",
+                padding: "0 40px 0 40px",
+              }}
+              onClick={() => handleViewChange("articles")}
+            >
+              Articles
+            </Box>
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                fontSize: "16px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: "600",
+                cursor: "pointer",
+                padding: "0 40px 0 40px",
+                color: view === "blogs" ? "#000" : "#777",
+                borderBottom: view === "blogs" ? "4px solid #313037 " : "none",
+              }}
+              onClick={() => handleViewChange("blogs")}
+            >
+              News
+            </Box>
+          </Box>
+        )}
+      </Box>
+      {count > 0 ? (
+        <Grid container spacing={2} sx={{ width: "100%" }}>
+          {(view === "articles" ? articles : news) &&
+            (view === "articles" ? articles : news).map((item: BlogProps) => (
+              <Grid
+                item
+                key={item.id}
+                xs={12}
+                sm={6}
+                md={3}
+                lg={4}
+                sx={{ marginBottom: "40px", width: "22rem" }}
+              >
+                <ArticlesCard props={item} />
+              </Grid>
+            ))}
+        </Grid>
+      ) : (
         <Box
           sx={{
-            width: "8.8rem",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "10px",
-            padding: "24px",
-            paddingLeft: "0",
+            fontSize: "16px",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: "600",
+            color: "#777",
+            textAlign: "center",
+            marginTop: "20px",
           }}
         >
-          <Box
-            sx={{
-              fontSize: "16px",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: "600",
-              cursor: "pointer",
-              color: view === "articles" ? "#000" : "#777",
-            }}
-            onClick={() => handleViewChange("articles")}
-          >
-            Articles
-          </Box>
-          <Box
-            sx={{
-              fontSize: "16px",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: "600",
-              cursor: "pointer",
-              color: view === "news" ? "#000" : "#777",
-            }}
-            onClick={() => handleViewChange("news")}
-          >
-            News
-          </Box>
+          {searching ? "No results found." : "Loading..."}
         </Box>
-      </Box>
-      <Grid container spacing={2} sx={{ width: "100%" }}>
-        {(view === "articles" ? articles : news) &&
-          (view === "articles" ? articles : news).map((item: BlogProps) => (
-            <Grid
-              item
-              key={item.id}
-              xs={12}
-              sm={6}
-              md={3}
-              lg={4}
-              sx={{ marginBottom: "40px", width: "22rem" }}
-            >
-              <ArticlesCard props={item} />
-            </Grid>
-          ))}
-      </Grid>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <PaginationComponent />
-      </Box>
-      <Footer />
+      )}
+      {count > 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <PaginationComponent />
+        </Box>
+      )}
     </Box>
   );
 };

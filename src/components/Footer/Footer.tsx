@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
   return (
     <Box
       sx={{
-        width: "100%",
+        width: "60%",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",

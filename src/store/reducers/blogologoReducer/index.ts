@@ -8,6 +8,8 @@ type BlogologoReducerType = {
   count: number;
   currentPage: number;
   view: string;
+  newSearch: string;
+  searching: boolean;
 };
 
 const defaulState: BlogologoReducerType = {
@@ -16,6 +18,8 @@ const defaulState: BlogologoReducerType = {
   count: 1,
   currentPage: 1,
   view: "articles",
+  newSearch: "",
+  searching: false,
 };
 
 const blogologoReducer: Reducer<BlogologoReducerType, AnyAction> = (
@@ -35,6 +39,13 @@ const blogologoReducer: Reducer<BlogologoReducerType, AnyAction> = (
       };
     case BlogReducerEnum.SET_VIEW:
       return { ...state, view: action.payload };
+
+    case BlogReducerEnum.SET_SEARCH:
+      return {
+        ...state,
+        newSearch: action.payload.newSearch,
+        searching: action.payload.searching,
+      };
     default:
       return state;
   }

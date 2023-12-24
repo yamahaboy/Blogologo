@@ -3,18 +3,16 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 import { useAppDispatch, useAppSelector } from "../../store/store";
-
-import {
-  getArticlesToStore,
-  getNewsToStore,
-  setPaginationData,
-} from "../../store/reducers/blogologoReducer/actions";
+import { setPaginationData } from "../../store/reducers/blogologoReducer/actions";
 import { limit } from "../../constants/constants";
+import {
+  getDataToStore,
+  searchAndSetResults,
+} from "../../store/reducers/blogologoReducer/actions";
 
 const PaginationComponent: React.FC = () => {
-  const { count, currentPage, view, articles, news } = useAppSelector(
-    (state) => state.blogologoReducer
-  );
+  const { count, currentPage, view, articles, news, searching, newSearch } =
+    useAppSelector((state) => state.blogologoReducer);
   const dispatch = useAppDispatch();
 
   const handlePageChange = (
@@ -23,20 +21,26 @@ const PaginationComponent: React.FC = () => {
   ) => {
     dispatch(setPaginationData(count, value));
 
-    if (view === "articles") {
-      dispatch(getArticlesToStore(value));
+    if (searching) {
+      dispatch(searchAndSetResults(view, newSearch));
     } else {
-      dispatch(getNewsToStore(value));
+      dispatch(getDataToStore(view, value));
     }
   };
 
   useEffect(() => {
-    if (view === "articles" && articles.length === 0) {
-      dispatch(getArticlesToStore(currentPage));
-    } else if (view === "news" && news.length === 0) {
-      dispatch(getNewsToStore(currentPage));
-    }
-  }, [dispatch, currentPage, articles, news, view]);
+    const fetchData = async () => {
+      if (!searching) {
+        if (view === "articles" && articles.length === 0) {
+          await dispatch(getDataToStore(view, currentPage));
+        } else if (view === "blogs" && news.length === 0) {
+          await dispatch(getDataToStore(view, currentPage));
+        }
+      }
+    };
+
+    fetchData();
+  }, [dispatch, currentPage, articles, news, view, searching]);
 
   return (
     <Stack spacing={2}>
