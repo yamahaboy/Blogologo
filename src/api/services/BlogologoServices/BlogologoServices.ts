@@ -1,5 +1,5 @@
 import { baseUrl, limit } from "../../../constants/constants";
-import { BlogologoProps } from "../../../models/BlogologoProps";
+import { BlogProps, BlogologoProps } from "../../../models/BlogologoProps";
 
 export const getValues = async (
   view: string,
@@ -22,4 +22,13 @@ export const getSearch = async (
   );
   const { count, results }: BlogologoProps = await response.json();
   return { count, results };
+};
+
+export const getPostById = async (
+  view: string,
+  id: number
+): Promise<BlogProps> => {
+  const response = await fetch(`${baseUrl}/${view}/${id}`);
+  const results: BlogProps = await response.json();
+  return results;
 };

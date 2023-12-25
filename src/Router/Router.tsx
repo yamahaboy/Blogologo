@@ -4,6 +4,9 @@ import { Suspense, lazy } from "react";
 
 export enum routeLocationsEnum {
   mainPage = "/",
+  postPage = "/postPage",
+  signIn = "/signIn",
+  signUp = "/signUp",
 }
 
 const Router: React.FC = () => {

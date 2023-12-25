@@ -2,12 +2,12 @@ import { AnyAction, combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import thunk, { ThunkDispatch } from "redux-thunk";
 import blogologoReducer from "./reducers/blogologoReducer";
+import authReducer from "./reducers/authReducer";
 
-const appReducer = combineReducers({ blogologoReducer });
+const appReducer = combineReducers({ authReducer, blogologoReducer });
 
 export const store = configureStore({
   reducer: appReducer,
-  // middleware: (getDefaultMiddleware) => [...getDefaultMiddleware(), thunk],
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
 

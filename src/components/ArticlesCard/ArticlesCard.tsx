@@ -5,9 +5,10 @@ import { enUS } from "date-fns/locale";
 
 type CardProps = {
   props: BlogProps;
+  onClick: () => void;
 };
 
-const Card: React.FC<CardProps> = ({ props }) => {
+const Card: React.FC<CardProps> = ({ props, onClick }) => {
   const { id, title, image_url, published_at } = props;
   const formattedDate = format(new Date(published_at), "LLL dd, yyyy", {
     locale: enUS,
@@ -15,6 +16,7 @@ const Card: React.FC<CardProps> = ({ props }) => {
   return (
     <Box
       key={id}
+      onClick={onClick}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -23,6 +25,7 @@ const Card: React.FC<CardProps> = ({ props }) => {
         borderRadius: "16px",
         border: "none",
         boxShadow: "0 .5rem 1.5rem rgba(0, 0, 0, 0.1)",
+        cursor: "pointer",
       }}
     >
       <Box
@@ -31,8 +34,31 @@ const Card: React.FC<CardProps> = ({ props }) => {
           height: "13rem",
           borderTopLeftRadius: "16px",
           borderTopRightRadius: "16px",
+          position: "relative",
+          overflow: "hidden",
+          transition: "filter 1s ease",
+          "&:hover": {
+            "& div": {
+              opacity: 0,
+            },
+            "& img": {
+              filter: "brightness(100%)",
+            },
+          },
         }}
       >
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            borderTopLeftRadius: "16px",
+            borderTopRightRadius: "16px",
+            position: "absolute",
+            background: "rgba(145, 46, 242, 0.6)",
+            transition: "opacity 1s ease",
+            opacity: 1,
+          }}
+        ></Box>
         <img
           src={image_url}
           alt="articleImg"

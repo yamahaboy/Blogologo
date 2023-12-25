@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
         justifyContent: "space-between",
         alignItems: "center",
         margin: "auto",
-        borderTop: "1px solid #808080",
+        borderTop: "1px solid #3130371A",
         marginTop: "72px",
         height: "92px",
       }}

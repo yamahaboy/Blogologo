@@ -3,27 +3,36 @@ import { Box, Grid } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   getDataToStore,
+  setSelectedCard,
   setView,
 } from "../../store/reducers/blogologoReducer/actions";
 import ArticlesCard from "../ArticlesCard/ArticlesCard";
 import PaginationComponent from "../Pagination/Pagination";
 import { BlogProps } from "../../models/BlogologoProps";
+import { useNavigate } from "react-router-dom";
+import { routeLocationsEnum } from "../../Router/Router";
 
 const BlogologoPage: React.FC = () => {
   const { articles, news, view, newSearch, searching, count } = useAppSelector(
     (state) => state.blogologoReducer
   );
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
+  const handleViewChange = (newView: string) => {
+    dispatch(setView(newView));
+  };
+  const handleselectCard = (card: BlogProps) => {
+    dispatch(setSelectedCard(card));
+    if (card.id) {
+      navigate(`${routeLocationsEnum.postPage}/${card.id}`);
+    }
+  };
   useEffect(() => {
     if (!searching) {
       dispatch(getDataToStore(view, 1));
     }
   }, [dispatch, view, searching]);
-
-  const handleViewChange = (newView: string) => {
-    dispatch(setView(newView));
-  };
 
   return (
     <Box
@@ -128,7 +137,10 @@ const BlogologoPage: React.FC = () => {
                 lg={4}
                 sx={{ marginBottom: "40px", width: "22rem" }}
               >
-                <ArticlesCard props={item} />
+                <ArticlesCard
+                  props={item}
+                  onClick={() => handleselectCard(item)}
+                />
               </Grid>
             ))}
         </Grid>

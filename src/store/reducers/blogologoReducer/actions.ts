@@ -2,6 +2,7 @@ import { Dispatch } from "react";
 import { AnyAction, BlogProps } from "../../../models/BlogologoProps";
 import { BlogReducerEnum } from "./actionTypes";
 import {
+  getPostById,
   getSearch,
   getValues,
 } from "../../../api/services/BlogologoServices/BlogologoServices";
@@ -36,6 +37,9 @@ export const setSearchStringToStore = (
   };
 };
 
+export const setSelectedCard = (card: BlogProps) => {
+  return { type: BlogReducerEnum.SET_SELECTED_CARD, payload: card };
+};
 export const getDataToStore = (view: string, page: number = 1) => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
@@ -59,20 +63,30 @@ export const getDataToStore = (view: string, page: number = 1) => {
 export const searchAndSetResults = (view: string, search: string) => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
-      const data = await getSearch(view, search);
+      const [data] = await Promise.all([getSearch(view, search)]);
 
       const { count, results } = data;
 
       if (view === "articles") {
         dispatch(setArticles(results));
-        dispatch(setNews([]));
       } else if (view === "blogs") {
         dispatch(setNews(results));
-        dispatch(setArticles([]));
       }
 
       dispatch(setPaginationData(count, 1));
       dispatch(setSearchStringToStore(search, true));
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+};
+
+export const getSelectedPostFromStore = (view: string, id: number) => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      const [data] = await Promise.all([getPostById(view, id)]);
+
+      dispatch(setSelectedCard(data));
     } catch (error) {
       console.log("Error", error);
     }

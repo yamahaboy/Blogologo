@@ -10,6 +10,7 @@ type BlogologoReducerType = {
   view: string;
   newSearch: string;
   searching: boolean;
+  selectedCard: BlogProps | null;
 };
 
 const defaulState: BlogologoReducerType = {
@@ -20,6 +21,7 @@ const defaulState: BlogologoReducerType = {
   view: "articles",
   newSearch: "",
   searching: false,
+  selectedCard: null,
 };
 
 const blogologoReducer: Reducer<BlogologoReducerType, AnyAction> = (
@@ -46,6 +48,8 @@ const blogologoReducer: Reducer<BlogologoReducerType, AnyAction> = (
         newSearch: action.payload.newSearch,
         searching: action.payload.searching,
       };
+    case BlogReducerEnum.SET_SELECTED_CARD:
+      return { ...state, selectedCard: action.payload };
     default:
       return state;
   }
