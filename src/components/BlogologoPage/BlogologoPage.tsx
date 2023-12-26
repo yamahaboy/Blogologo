@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   getDataToStore,
+  setArticles,
+  setNews,
   setSelectedCard,
   setView,
 } from "../../store/reducers/blogologoReducer/actions";
@@ -11,16 +13,19 @@ import PaginationComponent from "../Pagination/Pagination";
 import { BlogProps } from "../../models/BlogologoProps";
 import { useNavigate } from "react-router-dom";
 import { routeLocationsEnum } from "../../Router/Router";
+import FilterContainer from "../FilterContainer/FilterContainer";
 
 const BlogologoPage: React.FC = () => {
   const { articles, news, view, newSearch, searching, count } = useAppSelector(
     (state) => state.blogologoReducer
   );
+  const [sortValue, setSortValue] = useState<string>("none");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleViewChange = (newView: string) => {
     dispatch(setView(newView));
+    setSortValue("none");
   };
   const handleselectCard = (card: BlogProps) => {
     dispatch(setSelectedCard(card));
@@ -28,11 +33,34 @@ const BlogologoPage: React.FC = () => {
       navigate(`${routeLocationsEnum.postPage}/${card.id}`);
     }
   };
+  const handleSortChange = (value: string) => {
+    let sortedData;
+
+    if (value === "asc") {
+      sortedData = (view === "articles" ? articles : news)
+        .slice()
+        .sort((a, b) => a.title.localeCompare(b.title));
+    } else if (value === "desc") {
+      sortedData = (view === "articles" ? articles : news)
+        .slice()
+        .sort((a, b) => b.title.localeCompare(a.title));
+    } else {
+      sortedData = (view === "articles" ? articles : news).slice();
+    }
+
+    if (view === "articles") {
+      dispatch(setArticles(sortedData));
+    } else if (view === "blogs") {
+      dispatch(setNews(sortedData));
+    }
+
+    setSortValue(value);
+  };
   useEffect(() => {
-    if (!searching) {
+    if (!searching && sortValue === "none") {
       dispatch(getDataToStore(view, 1));
     }
-  }, [dispatch, view, searching]);
+  }, [dispatch, view, searching, sortValue]);
 
   return (
     <Box
@@ -52,7 +80,7 @@ const BlogologoPage: React.FC = () => {
           marginBottom: "5%",
           gap: "40px",
           width: "100%",
-          borderBottom: !searching ? "1px solid #313037" : "none",
+          borderBottom: !searching ? "1px solid #3130371A" : "none",
         }}
       >
         <Box
@@ -124,6 +152,9 @@ const BlogologoPage: React.FC = () => {
           </Box>
         )}
       </Box>
+      {!searching && count > 0 && (
+        <FilterContainer value={sortValue} onChange={handleSortChange} />
+      )}
       {count > 0 ? (
         <Grid container spacing={2} sx={{ width: "100%" }}>
           {(view === "articles" ? articles : news) &&

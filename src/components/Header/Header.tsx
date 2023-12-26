@@ -83,7 +83,7 @@ const Header: React.FC = () => {
           <img src={Logo} alt="logo" />
         </Box>
         {!isSearchOpen && (
-          <Box>
+          <Box sx={{ marginRight: "20px" }}>
             <IconButton onClick={handleSearch}>
               <SearchIcon sx={{ fontSize: "24px", color: "#000" }} />
             </IconButton>

@@ -17,8 +17,9 @@ import { routeLocationsEnum } from "../../Router/Router";
 
 const PageOfCard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { view, selectedCard, articles, news, newSearch, searching, count } =
-    useAppSelector((state) => state.blogologoReducer);
+  const { view, selectedCard, articles, news } = useAppSelector(
+    (state) => state.blogologoReducer
+  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const viewType = view === "blogs" ? "news" : view;
@@ -38,6 +39,7 @@ const PageOfCard: React.FC = () => {
     slidesToScroll: 1,
     arrows: false,
   };
+
   useEffect(() => {
     dispatch(getSelectedPostFromStore(view, Number(id)));
   }, [id, view, dispatch]);
@@ -80,7 +82,7 @@ const PageOfCard: React.FC = () => {
       >
         {selectedCard && selectedCard.title}
       </Box>
-      <Box sx={{ width: "70rem", height: "32rem", marginBottom: "32px" }}>
+      <Box sx={{ width: "100%", height: "32rem", marginBottom: "32px" }}>
         <img
           src={selectedCard?.image_url}
           alt="post img"

@@ -1,8 +1,9 @@
-import { AnyAction, combineReducers, configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import thunk, { ThunkDispatch } from "redux-thunk";
+import { ThunkDispatch } from "redux-thunk";
 import blogologoReducer from "./reducers/blogologoReducer";
 import authReducer from "./reducers/authReducer";
+import { AnyAction } from "../models/BlogologoProps";
 
 const appReducer = combineReducers({ authReducer, blogologoReducer });
 
