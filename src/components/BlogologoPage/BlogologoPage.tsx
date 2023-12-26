@@ -4,7 +4,10 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import {
   getDataToStore,
   setArticles,
+  setByDateToStore,
+  setDateInterval,
   setNews,
+  setSearchDateToStore,
   setSelectedCard,
   setView,
 } from "../../store/reducers/blogologoReducer/actions";
@@ -14,11 +17,25 @@ import { BlogProps } from "../../models/BlogologoProps";
 import { useNavigate } from "react-router-dom";
 import { routeLocationsEnum } from "../../Router/Router";
 import FilterContainer from "../FilterContainer/FilterContainer";
+import {
+  startOfDay,
+  startOfWeek,
+  startOfMonth,
+  startOfYear,
+  format,
+} from "date-fns";
 
 const BlogologoPage: React.FC = () => {
-  const { articles, news, view, newSearch, searching, count } = useAppSelector(
-    (state) => state.blogologoReducer
-  );
+  const {
+    articles,
+    news,
+    view,
+    newSearch,
+    searching,
+    count,
+    currentPage,
+    searchingDate,
+  } = useAppSelector((state) => state.blogologoReducer);
   const [sortValue, setSortValue] = useState<string>("none");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -26,7 +43,10 @@ const BlogologoPage: React.FC = () => {
   const handleViewChange = (newView: string) => {
     dispatch(setView(newView));
     setSortValue("none");
+    dispatch(setDateInterval(""));
+    dispatch(setSearchDateToStore("", false));
   };
+
   const handleselectCard = (card: BlogProps) => {
     dispatch(setSelectedCard(card));
     if (card.id) {
@@ -56,11 +76,42 @@ const BlogologoPage: React.FC = () => {
 
     setSortValue(value);
   };
+  const handleButtonClick = async (interval: string) => {
+    const currentDate = new Date();
+    let startDate;
+
+    switch (interval) {
+      case "day":
+        startDate = startOfDay(currentDate);
+        break;
+      case "week":
+        startDate = startOfWeek(currentDate);
+        break;
+      case "month":
+        startDate = startOfMonth(currentDate);
+        break;
+      case "year":
+        startDate = startOfYear(currentDate);
+        break;
+      default:
+        startDate = startOfDay(currentDate);
+        dispatch(setDateInterval(""));
+        setSortValue("none");
+        dispatch(getDataToStore(view, 1));
+        return;
+    }
+
+    const formattedStartDate = format(startDate, "yyyy-MM-dd");
+    await dispatch(setSearchDateToStore(formattedStartDate, true));
+    await dispatch(setByDateToStore(view, currentPage, formattedStartDate));
+    await dispatch(setDateInterval(interval));
+  };
+
   useEffect(() => {
-    if (!searching && sortValue === "none") {
+    if (!searching && sortValue === "none" && !searchingDate) {
       dispatch(getDataToStore(view, 1));
     }
-  }, [dispatch, view, searching, sortValue]);
+  }, [dispatch, view, searching, sortValue, searchingDate]);
 
   return (
     <Box
@@ -92,20 +143,7 @@ const BlogologoPage: React.FC = () => {
         >
           {searching ? `Search Results: ${newSearch}` : "Blog"}
         </Box>
-        {!searching && count === 0 && (
-          <Box
-            sx={{
-              fontSize: "16px",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: "600",
-              color: "#777",
-              marginBottom: "20px",
-            }}
-          >
-            No results found.
-          </Box>
-        )}
-        {!searching && count > 0 && (
+        {!searching && (
           <Box
             sx={{
               width: "8.8rem",
@@ -152,8 +190,12 @@ const BlogologoPage: React.FC = () => {
           </Box>
         )}
       </Box>
-      {!searching && count > 0 && (
-        <FilterContainer value={sortValue} onChange={handleSortChange} />
+      {!searching && (
+        <FilterContainer
+          value={sortValue}
+          onChange={handleSortChange}
+          onButtonClick={handleButtonClick}
+        />
       )}
       {count > 0 ? (
         <Grid container spacing={2} sx={{ width: "100%" }}>
@@ -162,11 +204,11 @@ const BlogologoPage: React.FC = () => {
               <Grid
                 item
                 key={item.id}
-                xs={12}
+                xs={7}
                 sm={6}
-                md={3}
+                md={5}
                 lg={4}
-                sx={{ marginBottom: "40px", width: "22rem" }}
+                sx={{ marginBottom: "40px", width: "33%" }}
               >
                 <ArticlesCard
                   props={item}
@@ -186,7 +228,7 @@ const BlogologoPage: React.FC = () => {
             marginTop: "20px",
           }}
         >
-          {searching ? "No results found." : "Loading..."}
+          No results found.
         </Box>
       )}
       {count > 0 && (

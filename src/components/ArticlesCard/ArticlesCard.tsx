@@ -20,7 +20,7 @@ const Card: React.FC<CardProps> = ({ props, onClick }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        width: "22rem",
+        width: "100%",
         height: "24.25rem",
         borderRadius: "16px",
         border: "none",
@@ -30,7 +30,7 @@ const Card: React.FC<CardProps> = ({ props, onClick }) => {
     >
       <Box
         sx={{
-          width: "22rem",
+          width: "100%",
           height: "13rem",
           borderTopLeftRadius: "16px",
           borderTopRightRadius: "16px",
@@ -58,7 +58,7 @@ const Card: React.FC<CardProps> = ({ props, onClick }) => {
             transition: "opacity 1s ease",
             opacity: 1,
           }}
-        ></Box>
+        />
         <img
           src={image_url}
           alt="articleImg"

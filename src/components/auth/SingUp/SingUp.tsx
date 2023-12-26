@@ -39,7 +39,7 @@ const SignUp: React.FC = () => {
         return;
       }
 
-      dispatch(setSingUp([values]));
+      dispatch(setSingUp(values));
       setFormSubmitted(true);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {

@@ -6,18 +6,31 @@ import {
   SelectChangeEvent,
   Button,
 } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { setDateInterval } from "../../store/reducers/blogologoReducer/actions";
 
 interface SortDropdownProps {
   value: string;
   onChange: (value: string) => void;
+  onButtonClick: (interval: string) => void;
 }
 
-const FilterContainer: React.FC<SortDropdownProps> = ({ value, onChange }) => {
+const FilterContainer: React.FC<SortDropdownProps> = ({
+  value,
+  onChange,
+  onButtonClick,
+}) => {
+  const { dateInterval } = useAppSelector((state) => state.blogologoReducer);
+  const dispatch = useAppDispatch();
   const handleSortChange = (event: SelectChangeEvent<string>) => {
     const selectedValue = event.target.value;
     onChange(selectedValue);
   };
-
+  const handleButtonClick = (interval: string) => {
+    const newInterval = interval === dateInterval ? "" : interval;
+    onButtonClick(newInterval);
+    dispatch(setDateInterval(newInterval));
+  };
   return (
     <Box
       sx={{
@@ -38,61 +51,61 @@ const FilterContainer: React.FC<SortDropdownProps> = ({ value, onChange }) => {
         }}
       >
         <Button
+          onClick={() => handleButtonClick("day")}
           sx={{
             borderRadius: "4px",
-            backgroundColor: "#3130371A",
-            color: "#31303780",
+            backgroundColor: dateInterval === "day" ? "#6C1BDB" : "#3130371A",
+            color: dateInterval === "day" ? "#fff" : "#31303780",
             fontSize: "16px",
             fontFamily: "Inter, sans-serif",
             fontWeight: "500",
             padding: "16px 32px 16px 32px",
             "&:hover": { backgroundColor: "#912EF2", color: "#fff" },
-            "&:active": { backgroundColor: "#6C1BDB", color: "#fff" },
           }}
         >
           Day
         </Button>
         <Button
+          onClick={() => handleButtonClick("week")}
           sx={{
             borderRadius: "4px",
-            backgroundColor: "#3130371A",
-            color: "#31303780",
+            backgroundColor: dateInterval === "week" ? "#6C1BDB" : "#3130371A",
+            color: dateInterval === "week" ? "#fff" : "#31303780",
             fontSize: "16px",
             fontFamily: "Inter, sans-serif",
             fontWeight: "500",
             padding: "16px 32px 16px 32px",
             "&:hover": { backgroundColor: "#912EF2", color: "#fff" },
-            "&:active": { backgroundColor: "#6C1BDB", color: "#fff" },
           }}
         >
           Week
         </Button>
         <Button
+          onClick={() => handleButtonClick("month")}
           sx={{
             borderRadius: "4px",
-            backgroundColor: "#3130371A",
-            color: "#31303780",
+            backgroundColor: dateInterval === "month" ? "#6C1BDB" : "#3130371A",
+            color: dateInterval === "month" ? "#fff" : "#31303780",
             fontSize: "16px",
             fontFamily: "Inter, sans-serif",
             fontWeight: "500",
             padding: "16px 32px 16px 32px",
             "&:hover": { backgroundColor: "#912EF2", color: "#fff" },
-            "&:active": { backgroundColor: "#6C1BDB", color: "#fff" },
           }}
         >
           Monath
         </Button>
         <Button
+          onClick={() => handleButtonClick("year")}
           sx={{
             borderRadius: "4px",
-            backgroundColor: "#3130371A",
-            color: "#31303780",
+            backgroundColor: dateInterval === "year" ? "#6C1BDB" : "#3130371A",
+            color: dateInterval === "year" ? "#fff" : "#31303780",
             fontSize: "16px",
             fontFamily: "Inter, sans-serif",
             fontWeight: "500",
             padding: "16px 32px 16px 32px",
             "&:hover": { backgroundColor: "#912EF2", color: "#fff" },
-            "&:active": { backgroundColor: "#6C1BDB", color: "#fff" },
           }}
         >
           Year

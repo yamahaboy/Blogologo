@@ -3,7 +3,10 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { setPaginationData } from "../../store/reducers/blogologoReducer/actions";
+import {
+  setByDateToStore,
+  setPaginationData,
+} from "../../store/reducers/blogologoReducer/actions";
 import { limit } from "../../constants/constants";
 import {
   getDataToStore,
@@ -11,8 +14,17 @@ import {
 } from "../../store/reducers/blogologoReducer/actions";
 
 const PaginationComponent: React.FC = () => {
-  const { count, currentPage, view, articles, news, searching, newSearch } =
-    useAppSelector((state) => state.blogologoReducer);
+  const {
+    count,
+    currentPage,
+    view,
+    articles,
+    news,
+    searching,
+    newSearch,
+    date,
+    searchingDate,
+  } = useAppSelector((state) => state.blogologoReducer);
   const dispatch = useAppDispatch();
 
   const handlePageChange = (
@@ -22,7 +34,10 @@ const PaginationComponent: React.FC = () => {
     dispatch(setPaginationData(count, value));
 
     if (searching) {
-      dispatch(searchAndSetResults(view, newSearch));
+      dispatch(searchAndSetResults(view, value, newSearch));
+    }
+    if (searchingDate) {
+      dispatch(setByDateToStore(view, value, date));
     } else {
       dispatch(getDataToStore(view, value));
     }

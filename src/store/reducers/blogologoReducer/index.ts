@@ -9,8 +9,11 @@ type BlogologoReducerType = {
   currentPage: number;
   view: string;
   newSearch: string;
+  date: string;
   searching: boolean;
+  searchingDate: boolean;
   selectedCard: BlogProps | null;
+  dateInterval: string;
 };
 
 const defaulState: BlogologoReducerType = {
@@ -20,8 +23,11 @@ const defaulState: BlogologoReducerType = {
   currentPage: 1,
   view: "articles",
   newSearch: "",
+  date: "",
   searching: false,
+  searchingDate: false,
   selectedCard: null,
+  dateInterval: "",
 };
 
 const blogologoReducer: Reducer<BlogologoReducerType, AnyAction> = (
@@ -48,8 +54,16 @@ const blogologoReducer: Reducer<BlogologoReducerType, AnyAction> = (
         newSearch: action.payload.newSearch,
         searching: action.payload.searching,
       };
+    case BlogReducerEnum.SET_SEARCH_DATE:
+      return {
+        ...state,
+        date: action.payload.date,
+        searchingDate: action.payload.searchingDate,
+      };
     case BlogReducerEnum.SET_SELECTED_CARD:
       return { ...state, selectedCard: action.payload };
+    case BlogReducerEnum.SET_DATE_INTERVAL:
+      return { ...state, dateInterval: action.payload };
     default:
       return state;
   }

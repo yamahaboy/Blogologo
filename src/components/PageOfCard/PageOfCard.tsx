@@ -178,15 +178,15 @@ const PageOfCard: React.FC = () => {
           ...
         </Box>
       </Box>
-      <Box sx={{ marginTop: "32px" }}>
+      <Box sx={{ marginTop: "32px", width: "100%" }}>
         <Slider {...sliderSettings}>
           {(view === "articles" ? articles : news) &&
             (view === "articles" ? articles : news).map((item: BlogProps) => (
-              <div key={item.id} style={{ margin: "0 10px" }}>
+              <Box key={item.id} style={{ margin: "0 10px" }}>
                 <Grid
                   container
                   spacing={2}
-                  sx={{ marginBottom: "40px", width: "22rem" }}
+                  sx={{ marginBottom: "40px", width: "300%" }}
                 >
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <ArticlesCard
@@ -195,7 +195,7 @@ const PageOfCard: React.FC = () => {
                     />
                   </Grid>
                 </Grid>
-              </div>
+              </Box>
             ))}
         </Slider>
       </Box>

@@ -14,7 +14,9 @@ import { useNavigate } from "react-router-dom";
 import { routeLocationsEnum } from "../../Router/Router";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 const Header: React.FC = () => {
-  const { view } = useAppSelector((state) => state.blogologoReducer);
+  const { view, currentPage } = useAppSelector(
+    (state) => state.blogologoReducer
+  );
   const dispatch = useAppDispatch();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -38,7 +40,7 @@ const Header: React.FC = () => {
   useEffect(() => {
     if (debouncedSearchTerm) {
       dispatch(setSearchStringToStore(debouncedSearchTerm, true));
-      dispatch(searchAndSetResults(view, debouncedSearchTerm));
+      dispatch(searchAndSetResults(view, currentPage, debouncedSearchTerm));
     } else {
       dispatch(setSearchStringToStore("", false));
       dispatch(getDataToStore(view, 1));
