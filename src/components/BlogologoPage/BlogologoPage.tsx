@@ -24,6 +24,7 @@ import {
   startOfYear,
   format,
 } from "date-fns";
+import useThemeColors from "../../hooks/useThemeColors";
 
 const BlogologoPage: React.FC = () => {
   const {
@@ -39,6 +40,7 @@ const BlogologoPage: React.FC = () => {
   const [sortValue, setSortValue] = useState<string>("none");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const themeColors = useThemeColors();
 
   const handleViewChange = (newView: string) => {
     dispatch(setView(newView));
@@ -116,133 +118,160 @@ const BlogologoPage: React.FC = () => {
   return (
     <Box
       sx={{
-        width: "60%",
-        margin: "auto",
-        height: "auto",
-        display: "flex",
-        flexDirection: "column",
+        maxWidth: "100%",
+        backgroundColor: themeColors.backgroundColor,
+        paddingTop: "72px",
+        paddingBottom: "72px",
       }}
     >
       <Box
         sx={{
+          width: "60%",
+          margin: "auto",
+          height: "auto",
           display: "flex",
           flexDirection: "column",
-          alignItems: "left",
-          marginBottom: "5%",
-          gap: "40px",
-          width: "100%",
-          borderBottom: !searching ? "1px solid #3130371A" : "none",
         }}
       >
         <Box
           sx={{
-            fontSize: "56px",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: "700",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "left",
+            marginBottom: "5%",
+            gap: "40px",
+            width: "100%",
+            borderBottom: !searching
+              ? `1px solid ${themeColors.borderTabsColor}`
+              : "none",
           }}
         >
-          {searching ? `Search Results: ${newSearch}` : "Blog"}
-        </Box>
-        {!searching && (
           <Box
             sx={{
-              width: "8.8rem",
-              height: "3rem",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontSize: "56px",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: "700",
+              color: themeColors.blogColor,
             }}
           >
+            {searching ? `Search Results: ${newSearch}` : "Blog"}
+          </Box>
+          {!searching && (
             <Box
               sx={{
-                width: "100%",
-                height: "100%",
-                fontSize: "16px",
-                fontFamily: "Inter, sans-serif",
-                fontWeight: "600",
-                cursor: "pointer",
-                color: view === "articles" ? "#000" : "#777",
-                borderBottom:
-                  view === "articles" ? "4px solid #313037 " : "none",
-                padding: "0 40px 0 40px",
+                width: "8.8rem",
+                height: "3rem",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
-              onClick={() => handleViewChange("articles")}
             >
-              Articles
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  fontSize: "16px",
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  color:
+                    view === "articles"
+                      ? themeColors.usedTabsColor
+                      : themeColors.unUsedTabsColor,
+                  borderBottom:
+                    view === "articles"
+                      ? `4px solid  ${themeColors.borderTabsColor} `
+                      : "none",
+                  padding: "0 40px 0 40px",
+                }}
+                onClick={() => handleViewChange("articles")}
+              >
+                Articles
+              </Box>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  fontSize: "16px",
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  padding: "0 40px 0 40px",
+                  color:
+                    view === "blogs"
+                      ? themeColors.usedTabsColor
+                      : themeColors.unUsedTabsColor,
+                  borderBottom:
+                    view === "blogs"
+                      ? `4px solid  ${themeColors.borderTabsColor} `
+                      : "none",
+                }}
+                onClick={() => handleViewChange("blogs")}
+              >
+                News
+              </Box>
             </Box>
-            <Box
-              sx={{
-                width: "100%",
-                height: "100%",
-                fontSize: "16px",
-                fontFamily: "Inter, sans-serif",
-                fontWeight: "600",
-                cursor: "pointer",
-                padding: "0 40px 0 40px",
-                color: view === "blogs" ? "#000" : "#777",
-                borderBottom: view === "blogs" ? "4px solid #313037 " : "none",
-              }}
-              onClick={() => handleViewChange("blogs")}
-            >
-              News
-            </Box>
+          )}
+        </Box>
+        {!searching && (
+          <FilterContainer
+            value={sortValue}
+            onChange={handleSortChange}
+            onButtonClick={handleButtonClick}
+          />
+        )}
+        {count > 0 ? (
+          <Grid container spacing={2} sx={{ width: "100%" }}>
+            {(view === "articles" ? articles : news) &&
+              (view === "articles" ? articles : news).map((item: BlogProps) => (
+                <Grid
+                  item
+                  key={item.id}
+                  xs={7}
+                  sm={6}
+                  md={5}
+                  lg={4}
+                  sx={{ marginBottom: "40px", width: "33%" }}
+                >
+                  <ArticlesCard
+                    props={item}
+                    onClick={() => handleselectCard(item)}
+                  />
+                </Grid>
+              ))}
+          </Grid>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              fontSize: "16px",
+              height: "52vh",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: "600",
+              color: "#777",
+              textAlign: "center",
+              margin: "auto",
+              marginTop: "20px",
+            }}
+          >
+            No results found.
+          </Box>
+        )}
+        {count > 0 && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <PaginationComponent />
           </Box>
         )}
       </Box>
-      {!searching && (
-        <FilterContainer
-          value={sortValue}
-          onChange={handleSortChange}
-          onButtonClick={handleButtonClick}
-        />
-      )}
-      {count > 0 ? (
-        <Grid container spacing={2} sx={{ width: "100%" }}>
-          {(view === "articles" ? articles : news) &&
-            (view === "articles" ? articles : news).map((item: BlogProps) => (
-              <Grid
-                item
-                key={item.id}
-                xs={7}
-                sm={6}
-                md={5}
-                lg={4}
-                sx={{ marginBottom: "40px", width: "33%" }}
-              >
-                <ArticlesCard
-                  props={item}
-                  onClick={() => handleselectCard(item)}
-                />
-              </Grid>
-            ))}
-        </Grid>
-      ) : (
-        <Box
-          sx={{
-            fontSize: "16px",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: "600",
-            color: "#777",
-            textAlign: "center",
-            marginTop: "20px",
-          }}
-        >
-          No results found.
-        </Box>
-      )}
-      {count > 0 && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <PaginationComponent />
-        </Box>
-      )}
     </Box>
   );
 };

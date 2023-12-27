@@ -13,10 +13,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import { routeLocationsEnum } from "../../Router/Router";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import useThemeColors from "../../hooks/useThemeColors";
 const Header: React.FC = () => {
   const { view, currentPage } = useAppSelector(
     (state) => state.blogologoReducer
   );
+  const themeColors = useThemeColors();
   const dispatch = useAppDispatch();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -54,8 +56,7 @@ const Header: React.FC = () => {
         width: "100%",
         height: "6rem",
         alignItems: "center",
-        background: "#fff",
-        marginBottom: "72px",
+        background: themeColors.headerColor,
       }}
     >
       <Box
@@ -73,7 +74,7 @@ const Header: React.FC = () => {
       >
         <Box
           sx={{
-            backgroundColor: "#fff",
+            backgroundColor: themeColors.headerColor,
             height: "100%",
             display: "flex",
             alignItems: "center",
@@ -87,7 +88,9 @@ const Header: React.FC = () => {
         {!isSearchOpen && (
           <Box sx={{ marginRight: "20px" }}>
             <IconButton onClick={handleSearch}>
-              <SearchIcon sx={{ fontSize: "24px", color: "#000" }} />
+              <SearchIcon
+                sx={{ fontSize: "24px", color: themeColors.searchBtnColor }}
+              />
             </IconButton>
           </Box>
         )}
@@ -99,10 +102,10 @@ const Header: React.FC = () => {
               placeholder="Search..."
               sx={{
                 fontSize: "16px",
-                color: "#31303780",
+                color: themeColors.footerTextColor,
                 width: "100%",
                 height: "100%",
-                backgroundColor: "#3130371A",
+                backgroundColor: themeColors.intervalBtnBackColor,
                 fontFamily: "Inter, sans-serif",
                 fontWeight: "400",
                 padding: "20px",
@@ -113,7 +116,9 @@ const Header: React.FC = () => {
                     handleSearch();
                   }}
                 >
-                  <CloseIcon sx={{ fontSize: "24px", color: "#000" }} />
+                  <CloseIcon
+                    sx={{ fontSize: "24px", color: themeColors.searchBtnColor }}
+                  />
                 </IconButton>
               }
             />
@@ -128,7 +133,7 @@ const Header: React.FC = () => {
           justifyContent: "left",
           alignItems: "center",
           paddingLeft: "1%",
-          borderLeft: "1px solid #f3f3f3",
+          borderLeft: `1px solid ${themeColors.leftBorder}`,
           gap: "16px",
           cursor: "pointer",
         }}
@@ -150,7 +155,7 @@ const Header: React.FC = () => {
             fontSize: "16px",
             fontFamily: "Inter, sans-serif",
             fontWeight: "600",
-            color: "#313037",
+            color: themeColors.userColor,
           }}
         >
           Sing in

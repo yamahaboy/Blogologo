@@ -16,7 +16,7 @@ const Router: React.FC = () => {
     <BrowserRouter>
       <Suspense>
         <Header />
-        <RouterRoutes />.
+        <RouterRoutes />
         <Footer />
       </Suspense>
     </BrowserRouter>

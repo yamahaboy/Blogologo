@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { setDateInterval } from "../../store/reducers/blogologoReducer/actions";
+import useThemeColors from "../../hooks/useThemeColors";
+import { activePurple, hoverPurple, white } from "../../styles/colorConstants";
 
 interface SortDropdownProps {
   value: string;
@@ -22,6 +24,7 @@ const FilterContainer: React.FC<SortDropdownProps> = ({
 }) => {
   const { dateInterval } = useAppSelector((state) => state.blogologoReducer);
   const dispatch = useAppDispatch();
+  const themeColors = useThemeColors();
   const handleSortChange = (event: SelectChangeEvent<string>) => {
     const selectedValue = event.target.value;
     onChange(selectedValue);
@@ -54,13 +57,17 @@ const FilterContainer: React.FC<SortDropdownProps> = ({
           onClick={() => handleButtonClick("day")}
           sx={{
             borderRadius: "4px",
-            backgroundColor: dateInterval === "day" ? "#6C1BDB" : "#3130371A",
-            color: dateInterval === "day" ? "#fff" : "#31303780",
+            backgroundColor:
+              dateInterval === "day"
+                ? activePurple
+                : themeColors.intervalBtnBackColor,
+            color:
+              dateInterval === "day" ? white : themeColors.intervalBtnColor,
             fontSize: "16px",
             fontFamily: "Inter, sans-serif",
             fontWeight: "500",
             padding: "16px 32px 16px 32px",
-            "&:hover": { backgroundColor: "#912EF2", color: "#fff" },
+            "&:hover": { backgroundColor: hoverPurple, color: white },
           }}
         >
           Day
@@ -69,13 +76,17 @@ const FilterContainer: React.FC<SortDropdownProps> = ({
           onClick={() => handleButtonClick("week")}
           sx={{
             borderRadius: "4px",
-            backgroundColor: dateInterval === "week" ? "#6C1BDB" : "#3130371A",
-            color: dateInterval === "week" ? "#fff" : "#31303780",
+            backgroundColor:
+              dateInterval === "week"
+                ? activePurple
+                : themeColors.intervalBtnBackColor,
+            color:
+              dateInterval === "week" ? white : themeColors.intervalBtnColor,
             fontSize: "16px",
             fontFamily: "Inter, sans-serif",
             fontWeight: "500",
             padding: "16px 32px 16px 32px",
-            "&:hover": { backgroundColor: "#912EF2", color: "#fff" },
+            "&:hover": { backgroundColor: hoverPurple, color: white },
           }}
         >
           Week
@@ -84,13 +95,17 @@ const FilterContainer: React.FC<SortDropdownProps> = ({
           onClick={() => handleButtonClick("month")}
           sx={{
             borderRadius: "4px",
-            backgroundColor: dateInterval === "month" ? "#6C1BDB" : "#3130371A",
-            color: dateInterval === "month" ? "#fff" : "#31303780",
+            backgroundColor:
+              dateInterval === "month"
+                ? activePurple
+                : themeColors.intervalBtnBackColor,
+            color:
+              dateInterval === "month" ? white : themeColors.intervalBtnColor,
             fontSize: "16px",
             fontFamily: "Inter, sans-serif",
             fontWeight: "500",
             padding: "16px 32px 16px 32px",
-            "&:hover": { backgroundColor: "#912EF2", color: "#fff" },
+            "&:hover": { backgroundColor: hoverPurple, color: white },
           }}
         >
           Monath
@@ -99,13 +114,17 @@ const FilterContainer: React.FC<SortDropdownProps> = ({
           onClick={() => handleButtonClick("year")}
           sx={{
             borderRadius: "4px",
-            backgroundColor: dateInterval === "year" ? "#6C1BDB" : "#3130371A",
-            color: dateInterval === "year" ? "#fff" : "#31303780",
+            backgroundColor:
+              dateInterval === "year"
+                ? activePurple
+                : themeColors.intervalBtnBackColor,
+            color:
+              dateInterval === "year" ? white : themeColors.intervalBtnColor,
             fontSize: "16px",
             fontFamily: "Inter, sans-serif",
             fontWeight: "500",
             padding: "16px 32px 16px 32px",
-            "&:hover": { backgroundColor: "#912EF2", color: "#fff" },
+            "&:hover": { backgroundColor: hoverPurple, color: white },
           }}
         >
           Year
@@ -117,7 +136,13 @@ const FilterContainer: React.FC<SortDropdownProps> = ({
         onChange={handleSortChange}
         sx={{
           width: "25%",
-          backgroundColor: "#fff",
+          backgroundColor: themeColors.dropDownBackColor,
+          color: themeColors.textInCardColor,
+          border: "none",
+          outline: "none",
+          "&:hover": {
+            outline: `1px solid ${hoverPurple}`,
+          },
         }}
       >
         <MenuItem value="none">Sort: none</MenuItem>

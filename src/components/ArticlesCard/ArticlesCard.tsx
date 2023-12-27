@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { BlogProps } from "../../models/BlogologoProps";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
+import useThemeColors from "../../hooks/useThemeColors";
 
 type CardProps = {
   props: BlogProps;
@@ -10,6 +11,7 @@ type CardProps = {
 
 const Card: React.FC<CardProps> = ({ props, onClick }) => {
   const { id, title, image_url, published_at } = props;
+  const themeColors = useThemeColors();
   const formattedDate = format(new Date(published_at), "LLL dd, yyyy", {
     locale: enUS,
   });
@@ -23,6 +25,7 @@ const Card: React.FC<CardProps> = ({ props, onClick }) => {
         width: "100%",
         height: "24.25rem",
         borderRadius: "16px",
+        backgroundColor: themeColors.cardBackColor,
         border: "none",
         boxShadow: "0 .5rem 1.5rem rgba(0, 0, 0, 0.1)",
         cursor: "pointer",
@@ -86,7 +89,7 @@ const Card: React.FC<CardProps> = ({ props, onClick }) => {
             fontWeight: "500",
             fontFamily: "Inter, sans-serif",
             fontSize: "16px",
-            color: "#31303780",
+            color: themeColors.footerTextColor,
           }}
         >
           {formattedDate}
@@ -96,7 +99,7 @@ const Card: React.FC<CardProps> = ({ props, onClick }) => {
             fontWeight: "600",
             fontFamily: "Inter, sans-serif",
             fontSize: "18px",
-            color:"#313037"
+            color: themeColors.textInCardColor,
           }}
         >
           {title}

@@ -12,6 +12,8 @@ import {
   getDataToStore,
   searchAndSetResults,
 } from "../../store/reducers/blogologoReducer/actions";
+import useThemeColors from "../../hooks/useThemeColors";
+import { activePurple, hoverPurple } from "../../styles/colorConstants";
 
 const PaginationComponent: React.FC = () => {
   const {
@@ -26,7 +28,7 @@ const PaginationComponent: React.FC = () => {
     searchingDate,
   } = useAppSelector((state) => state.blogologoReducer);
   const dispatch = useAppDispatch();
-
+  const themeColors = useThemeColors();
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -66,14 +68,17 @@ const PaginationComponent: React.FC = () => {
         sx={{
           "& .MuiPaginationItem-root": {
             borderRadius: "50%",
-            color: "#313037",
+            color: themeColors.paginationColor,
             fontSize: "16px",
             backgroundColor: "transparent",
             fontWeight: "500",
             fontFamily: "Inter, sans-serif",
           },
+          "&  .MuiPaginationItem-root:hover": {
+            color: hoverPurple,
+          },
           "& .MuiPaginationItem-page.Mui-selected": {
-            color: "#6C1BDB",
+            color: activePurple,
           },
         }}
       />
