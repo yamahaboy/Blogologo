@@ -1,0 +1,8 @@
+export const lightBackGround = "#f3f3f3"
+export const darkBackGround = "#313037"
+export const white = "#fff"
+export const dateInCard50 = "#31303780"
+export const titleColor = "#313037"
+export const activePurple = "#6C1BDB"
+export const hoverPurple = "#912EF2"
+export const darkBackGround10 = "#3130371A"

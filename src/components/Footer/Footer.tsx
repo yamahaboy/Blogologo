@@ -1,7 +1,18 @@
-import { Box, FormControlLabel, FormGroup } from "@mui/material";
-import { MaterialUISwitch } from "./styles";
+import React, { useContext } from "react";
+import { Box, FormControlLabel, FormGroup, Switch } from "@mui/material";
+import useThemeColors from "../../hooks/useThemeColors";
+import { ThemeContext, ThemeEnum } from "../../store/context/ThemeContext";
 
 const Footer: React.FC = () => {
+  const { theme, setTheme } = useContext(ThemeContext);
+  const themeColors = useThemeColors();
+
+  const handleThemeToggle = () => {
+    setTheme((prevTheme) =>
+      prevTheme === ThemeEnum.light ? ThemeEnum.dark : ThemeEnum.light
+    );
+  };
+
   return (
     <Box
       sx={{
@@ -14,6 +25,7 @@ const Footer: React.FC = () => {
         borderTop: "1px solid #3130371A",
         marginTop: "72px",
         height: "92px",
+        backgroundColor: themeColors.backgroundColor,
       }}
     >
       <Box
@@ -21,7 +33,7 @@ const Footer: React.FC = () => {
           fontWeight: "400",
           fontFamily: "Inter, sans-serif",
           fontSize: "16px",
-          color: "#808080",
+          color: themeColors.textInCardColor,
         }}
       >
         ©2022 Blogolog
@@ -39,14 +51,19 @@ const Footer: React.FC = () => {
             fontWeight: "400",
             fontFamily: "Inter, sans-serif",
             fontSize: "16px",
-            color: "#808080",
+            color: themeColors.textInCardColor,
           }}
         >
           Dark theme
         </Box>
         <FormGroup>
           <FormControlLabel
-            control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
+            control={
+              <Switch
+                checked={theme === ThemeEnum.dark}
+                onChange={handleThemeToggle}
+              />
+            }
             label=""
           />
         </FormGroup>

@@ -86,7 +86,7 @@ const Card: React.FC<CardProps> = ({ props, onClick }) => {
             fontWeight: "500",
             fontFamily: "Inter, sans-serif",
             fontSize: "16px",
-            color: "#808080",
+            color: "#31303780",
           }}
         >
           {formattedDate}
@@ -96,6 +96,7 @@ const Card: React.FC<CardProps> = ({ props, onClick }) => {
             fontWeight: "600",
             fontFamily: "Inter, sans-serif",
             fontSize: "18px",
+            color:"#313037"
           }}
         >
           {title}
