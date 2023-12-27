@@ -14,17 +14,18 @@ import { useNavigate } from "react-router-dom";
 import { routeLocationsEnum } from "../../Router/Router";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import useThemeColors from "../../hooks/useThemeColors";
+import { white } from "../../styles/colorConstants";
 const Header: React.FC = () => {
   const { view, currentPage } = useAppSelector(
     (state) => state.blogologoReducer
   );
+  const { user } = useAppSelector((state) => state.authReducer);
   const themeColors = useThemeColors();
   const dispatch = useAppDispatch();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const debouncedSearchTerm = useDebounce(searchTerm);
   const navigate = useNavigate();
-
   const handleNavigate = (path: string) => {
     navigate(path);
   };
@@ -38,6 +39,10 @@ const Header: React.FC = () => {
     dispatch(setSearchStringToStore("", false));
     dispatch(getDataToStore(view, 1));
   };
+
+  const initials = user
+    ? `${user.name.charAt(0)}${user.surname.charAt(0)}`
+    : null;
 
   useEffect(() => {
     if (debouncedSearchTerm) {
@@ -146,9 +151,17 @@ const Header: React.FC = () => {
             width: "3rem",
             height: "3rem",
             borderRadius: "4px",
+            fontSize: "16px",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: "600",
+            color: "#fff",
           }}
         >
-          <PeopleAltOutlinedIcon sx={{ fontSize: "24px", color: "#fff" }} />
+          {user ? (
+            `${initials}`
+          ) : (
+            <PeopleAltOutlinedIcon sx={{ fontSize: "24px", color: "#fff" }} />
+          )}
         </Avatar>
         <Box
           sx={{
@@ -158,7 +171,7 @@ const Header: React.FC = () => {
             color: themeColors.userColor,
           }}
         >
-          Sing in
+          {user ? `${user.name} ${user.surname}` : "Sign In"}
         </Box>
       </Box>
     </Box>

@@ -29,6 +29,7 @@ type ThemeColorType = {
   textInCardColor: string;
   paginationColor: string;
   footerTextColor: string;
+  inputColor: string;
 };
 type ThemeVariant = {
   light: ThemeColorType;
@@ -54,6 +55,7 @@ export const colors: ThemeVariant = {
     textInCardColor: titleColor,
     paginationColor: titleColor,
     footerTextColor: dateInCard50,
+    inputColor: white,
   },
   dark: {
     backgroundColor: darkBackGround,
@@ -73,5 +75,6 @@ export const colors: ThemeVariant = {
     textInCardColor: white,
     paginationColor: white,
     footerTextColor: white50,
+    inputColor: white10,
   },
 };

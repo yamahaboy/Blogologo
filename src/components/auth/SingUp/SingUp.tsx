@@ -1,297 +1,353 @@
 import React, { useState } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form, ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
-import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { useAppDispatch } from "../../../store/store";
 import { useNavigate } from "react-router-dom";
 import { routeLocationsEnum } from "../../../Router/Router";
-import { setSingUp } from "../../../store/reducers/authReducer/actions";
+import {
+  setNameSurname,
+  setSingUp,
+} from "../../../store/reducers/authReducer/actions";
 import { Box, Button, TextField } from "@mui/material";
 import { SingUp } from "../../../models/authProps";
+import useAuth from "../../../hooks/useAuth";
+import useThemeColors from "../../../hooks/useThemeColors";
 
 const SignUp: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { singUp } = useAppSelector((state) => state.authReducer);
+  const { signUp } = useAuth();
+  const themeColors = useThemeColors();
   const [error, setError] = useState<string | null>(null);
-  const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
 
   const handleNavigate = (path: string) => {
     navigate(path);
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
-    Name: Yup.string().required("Name is required"),
-    Surname: Yup.string().required("Surname is required"),
+    name: Yup.string().required(),
+    surname: Yup.string().required(),
+    email: Yup.string().email().required(),
+    password: Yup.string()
+      .min(4, "* Password must be longer than 4 symbols")
+      .max(15, "* Password must be shoter than 4 symbols")
+      .matches(
+        /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{4,15})/,
+        "* Password must contain at least one uppercase letter and one special character"
+      )
+      .required(),
   });
 
-  const handleSubmit = async (values: SingUp) => {
-    try {
-      await validationSchema.validate(values, { abortEarly: false });
-      const userExists = singUp.find((user) => user.email === values.email);
+  const intialFormikValues: SingUp = {
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+  };
 
-      if (userExists) {
-        setError("User with this email already exists");
-        setFormSubmitted(false);
-        return;
-      }
+  const handleSubmit = (formikValues: SingUp) => {
+    const { isSuccess, error } = signUp({
+      name: formikValues.name,
+      surname: formikValues.surname,
+      password: formikValues.password,
+      email: formikValues.email,
+    });
 
-      dispatch(setSingUp(values));
-      setFormSubmitted(true);
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errorMessage = error.errors.join(" ");
-        setError(errorMessage);
-        setFormSubmitted(false);
-      }
+    if (error) {
+      setError(error);
+      return;
+    }
+
+    if (isSuccess) {
+      formik.resetForm();
+      navigate(routeLocationsEnum.mainPage);
+      dispatch(setSingUp(formikValues));
+      dispatch(
+        setNameSurname({
+          name: formikValues.name,
+          surname: formikValues.surname,
+        })
+      );
     }
   };
+
+  const formik = useFormik({
+    validateOnMount: true,
+    initialValues: intialFormikValues,
+    validationSchema: validationSchema,
+    onSubmit: handleSubmit,
+  });
 
   return (
     <Box
       sx={{
-        width: "60%",
-        margin: "auto",
-        height: "auto",
-        display: "flex",
-        flexDirection: "column",
+        maxWidth: "100%",
+        height: "67vh",
+        backgroundColor: themeColors.backgroundColor,
+        paddingTop: "72px",
+        paddingBottom: "15%",
       }}
     >
       <Box
-        onClick={() => handleNavigate(`${routeLocationsEnum.mainPage}`)}
         sx={{
-          fontSize: "16px",
-          fontFamily: "Inter, sans-serif",
-          fontWeight: "400",
-          color: "#313037",
-          cursor: "pointer",
-          marginBottom: "32px",
+          width: "60%",
+          margin: "auto",
+          height: "auto",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        Back to home
-      </Box>
-      <Box
-        sx={{
-          fontSize: "56px",
-          fontFamily: "Inter, sans-serif",
-          fontWeight: "700",
-          color: "#313037",
-          marginBottom: "32px",
-        }}
-      >
-        Sign Up
-      </Box>
-      <Formik
-        initialValues={{ email: "", password: "", Name: "", Surname: "" }}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        <Form
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "auto",
-            width: "50%",
-            height: "auto",
-            gap: "40px",
-            padding: "40px",
-            border: "none",
-            borderRadius: "16px",
-            backgroundColor: "#fff",
+        <Box
+          onClick={() => handleNavigate(`${routeLocationsEnum.mainPage}`)}
+          sx={{
+            fontSize: "16px",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: "400",
+            color: themeColors.blogColor,
+            cursor: "pointer",
+            marginBottom: "32px",
           }}
         >
-          <Box
-            sx={{
+          Back to home
+        </Box>
+        <Box
+          sx={{
+            fontSize: "56px",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: "700",
+            color: themeColors.blogColor,
+            marginBottom: "32px",
+          }}
+        >
+          Sign Up
+        </Box>
+        <Formik
+          initialValues={{ email: "", password: "", name: "", surname: "" }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          <Form
+            style={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "left",
-              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "auto",
+              width: "50%",
               height: "auto",
-              gap: "5px",
+              gap: "40px",
+              padding: "40px",
+              border: "none",
+              borderRadius: "16px",
+              backgroundColor: themeColors.cardBackColor,
             }}
           >
             <Box
               sx={{
-                fontSize: "16px",
-                fontFamily: "Inter, sans-serif",
-                fontWeight: "600",
-                color: "#313037",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "left",
+                width: "100%",
+                height: "auto",
+                gap: "5px",
               }}
             >
-              Email
+              <Box
+                sx={{
+                  fontSize: "16px",
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: "600",
+                  color: themeColors.blogColor,
+                }}
+              >
+                Email
+              </Box>
+              <Field
+                placeholder="Your email"
+                type="text"
+                id="email"
+                name="email"
+                as={TextField}
+                style={{
+                  backgroundColor: themeColors.inputColor,
+                  color: themeColors.footerTextColor,
+                }}
+              />
+              <ErrorMessage name="email">
+                {(msg) => (
+                  <Box sx={{ color: "red", marginTop: "10px" }}>{msg}</Box>
+                )}
+              </ErrorMessage>
             </Box>
-            <Field
-              placeholder="Your email"
-              type="text"
-              id="email"
-              name="email"
-              as={TextField}
-              fullWidth
-            />
-            <ErrorMessage name="email">
-              {(msg) => (
-                <Box sx={{ color: "red", marginTop: "10px" }}>{msg}</Box>
-              )}
-            </ErrorMessage>
-          </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "left",
-              width: "100%",
-              height: "auto",
-              gap: "5px",
-            }}
-          >
             <Box
               sx={{
-                fontSize: "16px",
-                fontFamily: "Inter, sans-serif",
-                fontWeight: "600",
-                color: "#313037",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "left",
+                width: "100%",
+                height: "auto",
+                gap: "5px",
               }}
             >
-              Password
+              <Box
+                sx={{
+                  fontSize: "16px",
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: "600",
+                  color: themeColors.blogColor,
+                }}
+              >
+                Password
+              </Box>
+              <Field
+                placeholder="Your password"
+                type="password"
+                id="password"
+                name="password"
+                as={TextField}
+                style={{
+                  backgroundColor: themeColors.inputColor,
+                  color: themeColors.footerTextColor,
+                }}
+              />
+              <ErrorMessage name="password">
+                {(msg) => (
+                  <Box sx={{ color: "red", marginTop: "10px" }}>{msg}</Box>
+                )}
+              </ErrorMessage>
             </Box>
-            <Field
-              placeholder="Your password"
-              type="password"
-              id="password"
-              name="password"
-              as={TextField}
-              fullWidth
-            />
-            <ErrorMessage name="password">
-              {(msg) => (
-                <Box sx={{ color: "red", marginTop: "10px" }}>{msg}</Box>
-              )}
-            </ErrorMessage>
-          </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "left",
-              width: "100%",
-              height: "auto",
-              gap: "5px",
-            }}
-          >
             <Box
               sx={{
-                fontSize: "16px",
-                fontFamily: "Inter, sans-serif",
-                fontWeight: "600",
-                color: "#313037",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "left",
+                width: "100%",
+                height: "auto",
+                gap: "5px",
               }}
             >
-              Name
+              <Box
+                sx={{
+                  fontSize: "16px",
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: "600",
+                  color: themeColors.blogColor,
+                }}
+              >
+                Name
+              </Box>
+              <Field
+                placeholder="Your name"
+                type="text"
+                id="name"
+                name="name"
+                as={TextField}
+                style={{
+                  backgroundColor: themeColors.inputColor,
+                  color: themeColors.footerTextColor,
+                }}
+              />
+              <ErrorMessage name="name">
+                {(msg) => (
+                  <Box sx={{ color: "red", marginTop: "10px" }}>{msg}</Box>
+                )}
+              </ErrorMessage>
             </Box>
-            <Field
-              placeholder="Your name"
-              type="text"
-              id="Name"
-              name="Name"
-              as={TextField}
-              fullWidth
-            />
-            <ErrorMessage name="Name">
-              {(msg) => (
-                <Box sx={{ color: "red", marginTop: "10px" }}>{msg}</Box>
-              )}
-            </ErrorMessage>
-          </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "left",
-              width: "100%",
-              height: "auto",
-              gap: "5px",
-            }}
-          >
             <Box
               sx={{
-                fontSize: "16px",
-                fontFamily: "Inter, sans-serif",
-                fontWeight: "600",
-                color: "#313037",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "left",
+                width: "100%",
+                height: "auto",
+                gap: "5px",
               }}
             >
-              Surname
+              <Box
+                sx={{
+                  fontSize: "16px",
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: "600",
+                  color: themeColors.blogColor,
+                }}
+              >
+                Surname
+              </Box>
+              <Field
+                placeholder="Your surname"
+                type="text"
+                id="surname"
+                name="surname"
+                as={TextField}
+                style={{
+                  backgroundColor: themeColors.inputColor,
+                  color: themeColors.footerTextColor,
+                }}
+              />
+              <ErrorMessage name="surname">
+                {(msg) => (
+                  <Box sx={{ color: "red", marginTop: "10px" }}>{msg}</Box>
+                )}
+              </ErrorMessage>
             </Box>
-            <Field
-              placeholder="Your surname"
-              type="text"
-              id="Surname"
-              name="Surname"
-              as={TextField}
-              fullWidth
-            />
-            <ErrorMessage name="Surname">
-              {(msg) => (
-                <Box sx={{ color: "red", marginTop: "10px" }}>{msg}</Box>
-              )}
-            </ErrorMessage>
-          </Box>
-          <Button
-            type="submit"
-            sx={{
-              width: "100%",
-              borderRadius: "4px",
-              backgroundColor: "#6C1BDB",
-              color: "#fff",
-              height: "3.5rem",
-              fontSize: "18px",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: "600",
-              "&:hover": {
+            <Button
+              type="submit"
+              sx={{
+                width: "100%",
+                borderRadius: "4px",
                 backgroundColor: "#6C1BDB",
-              },
-            }}
-          >
-            Sign Up
-          </Button>
-
-          {formSubmitted && (
-            <Box sx={{ color: "green", marginTop: "10px" }}>
-              Account created successfully!
-            </Box>
-          )}
-
-          {error && <Box sx={{ color: "red", marginTop: "10px" }}>{error}</Box>}
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              fontSize: "16px",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: "400",
-              color: "#8D8E97",
-              gap: "5px",
-            }}
-          >
-            Already have an account?
-            <span
-              style={{ color: "#6C1BDB", cursor: "pointer", fontWeight: "500" }}
-              onClick={() => handleNavigate(`${routeLocationsEnum.signIn}`)}
+                color: "#fff",
+                height: "3.5rem",
+                fontSize: "18px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: "600",
+                "&:hover": {
+                  backgroundColor: "#6C1BDB",
+                },
+              }}
             >
-              Sign In
-            </span>
-          </Box>
-        </Form>
-      </Formik>
+              Sign Up
+            </Button>
+
+            {formik.status && (
+              <Box sx={{ color: "green", marginTop: "10px" }}>
+                Account created successfully!
+              </Box>
+            )}
+
+            {error && (
+              <Box sx={{ color: "red", marginTop: "10px" }}>{error}</Box>
+            )}
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                fontSize: "16px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: "400",
+                color: "#8D8E97",
+                gap: "5px",
+              }}
+            >
+              Already have an account?
+              <span
+                style={{
+                  color: "#6C1BDB",
+                  cursor: "pointer",
+                  fontWeight: "500",
+                }}
+                onClick={() => handleNavigate(`${routeLocationsEnum.signIn}`)}
+              >
+                Sign In
+              </span>
+            </Box>
+          </Form>
+        </Formik>
+      </Box>
     </Box>
   );
 };
