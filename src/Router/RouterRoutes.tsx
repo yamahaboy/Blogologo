@@ -2,8 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import { routeLocationsEnum } from "./Router";
 import MainPage from "./pages/MainPage";
 import CardPage from "./pages/CardPage";
-import SingUpPage from "./pages/auth/SingUpPage";
-import SingInPage from "./pages/auth/SingInPage";
+import SignInPage from "./pages/auth/SignInPage";
+import SignUpPage from "./pages/auth/SignUpPage";
 
 const RouterRoutes = () => {
   return (
@@ -14,8 +14,8 @@ const RouterRoutes = () => {
           path={`${routeLocationsEnum.postPage}/:id`}
           element={<CardPage />}
         />
-        <Route path={routeLocationsEnum.signIn} element={<SingInPage />} />
-        <Route path={routeLocationsEnum.signUp} element={<SingUpPage />} />
+        <Route path={routeLocationsEnum.signIn} element={<SignInPage />} />
+        <Route path={routeLocationsEnum.signUp} element={<SignUpPage />} />
       </Route>
     </Routes>
   );

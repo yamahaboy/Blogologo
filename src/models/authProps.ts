@@ -1,16 +1,16 @@
-export type SignUp = {
+export type SignUpProps = {
   email: string;
   password: string;
   name: string;
   surname: string;
 };
 
-export type SignIn = {
+export type SignInProps = {
   email: string;
   password: string;
 };
 
-export type User = {
+export type UserProps = {
   id: string;
   name: string;
   surname: string;
@@ -18,7 +18,7 @@ export type User = {
   password: string;
 };
 
-export type Label = {
+export type LabelProps = {
   name: string;
   surname: string;
 };

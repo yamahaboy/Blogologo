@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Formik, Field, Form, ErrorMessage, useFormik } from "formik";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 import { useAppDispatch } from "../../../store/store";
 import { useNavigate } from "react-router-dom";
 import { routeLocationsEnum } from "../../../Router/Router";
@@ -8,8 +8,8 @@ import {
   setNameSurname,
   setSingUp,
 } from "../../../store/reducers/authReducer/actions";
-import { Box, Button, TextField } from "@mui/material";
-import { SignUp } from "../../../models/authProps";
+import { Box, Button, TextField, useMediaQuery } from "@mui/material";
+import { SignUpProps } from "../../../models/authProps";
 import useAuth from "../../../hooks/useAuth";
 import useThemeColors from "../../../hooks/useThemeColors";
 
@@ -18,6 +18,7 @@ const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const { signUp } = useAuth();
   const themeColors = useThemeColors();
+  const isSmallScreen = useMediaQuery("(max-width:1100px)");
   const [error, setError] = useState<string | null>(null);
 
   const handleNavigate = (path: string) => {
@@ -38,14 +39,14 @@ const SignUp: React.FC = () => {
       .required(),
   });
 
-  const intialFormikValues: SignUp = {
+  const intialFormikValues: SignUpProps = {
     name: "",
     surname: "",
     email: "",
     password: "",
   };
 
-  const handleSubmit = (formikValues: SignUp) => {
+  const handleSubmit = (formikValues: SignUpProps) => {
     const { isSuccess, error } = signUp({
       name: formikValues.name,
       surname: formikValues.surname,
@@ -85,7 +86,7 @@ const SignUp: React.FC = () => {
         height: "67vh",
         backgroundColor: themeColors.backgroundColor,
         paddingTop: "72px",
-        paddingBottom: "15%",
+        paddingBottom: isSmallScreen ? "30%" : "25%",
       }}
     >
       <Box
@@ -133,7 +134,7 @@ const SignUp: React.FC = () => {
               justifyContent: "center",
               alignItems: "center",
               margin: "auto",
-              width: "50%",
+              width: isSmallScreen ? "70%" : "50%",
               height: "auto",
               gap: "40px",
               padding: "40px",

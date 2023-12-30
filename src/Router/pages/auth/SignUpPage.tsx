@@ -1,9 +1,9 @@
-import SingUp from "../../../components/auth/SingUp/SingUp";
+import SignUp from "../../../components/auth/SingUp/SingUp";
 
 const SingUpPage: React.FC = () => {
   return (
     <>
-      <SingUp />
+      <SignUp />
     </>
   );
 };

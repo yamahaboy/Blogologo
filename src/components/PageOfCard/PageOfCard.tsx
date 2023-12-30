@@ -15,12 +15,25 @@ import ArticlesCard from "../Card/Card";
 import { BlogProps } from "../../models/BlogologoProps";
 import { routeLocationsEnum } from "../../Router/Router";
 import useThemeColors from "../../hooks/useThemeColors";
+import usePageOfCardStyles from "./styles";
 
 const PageOfCard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { view, selectedCard, articles, news } = useAppSelector(
     (state) => state.blogologoReducer
   );
+  const {
+    pageOfCardStyles,
+    pageStyles,
+    routeStyles,
+    titleStyles,
+    imgContainerStyles,
+    imgStyles,
+    summaryStyles,
+    btnContainerStyles,
+    btnStyles,
+    btnImgStyles,
+  } = usePageOfCardStyles();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const themeColors = useThemeColors();
@@ -47,143 +60,45 @@ const PageOfCard: React.FC = () => {
   }, [id, view, dispatch]);
 
   return (
-    <Box
-      sx={{
-        maxWidth: "100%",
-        backgroundColor: themeColors.backgroundColor,
-        paddingTop: "72px",
-        paddingBottom: "72px",
-      }}
-    >
-      <Box
-        sx={{
-          width: "60%",
-          margin: "auto",
-          height: "auto",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "10px",
-            fontSize: "16px",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: "400",
-            color: themeColors.blogColor,
-            marginBottom: "32px",
-          }}
-        >
+    <Box sx={pageOfCardStyles}>
+      <Box sx={pageStyles}>
+        <Box sx={routeStyles}>
           Home
           <span style={{ color: themeColors.footerTextColor }}>
             / {viewType} {selectedCard && selectedCard.id}
           </span>
         </Box>
-        <Box
-          sx={{
-            fontSize: "56px",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: "700",
-            textAlign: "left",
-            marginBottom: "32px",
-            color: themeColors.blogColor,
-          }}
-        >
-          {selectedCard && selectedCard.title}
+        <Box sx={titleStyles}>{selectedCard && selectedCard.title}</Box>
+        <Box sx={imgContainerStyles}>
+          <img src={selectedCard?.image_url} alt="post img" style={imgStyles} />
         </Box>
-        <Box sx={{ width: "100%", height: "32rem", marginBottom: "32px" }}>
-          <img
-            src={selectedCard?.image_url}
-            alt="post img"
-            style={{ width: "100%", height: "100%", borderRadius: "16px" }}
-          />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "auto",
-            width: "70%",
-            fontSize: "18px",
-            fontFamily: "Inter, sans-serif",
-            fontWeight: "400",
-            color: themeColors.blogColor,
-            marginBottom: "32px",
-          }}
-        >
-          {selectedCard && selectedCard.summary}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "6px",
-            paddingBottom: "32px",
-            borderBottom: `1px solid ${themeColors.intervalBtnBackColor}`,
-          }}
-        >
+        <Box sx={summaryStyles}>{selectedCard && selectedCard.summary}</Box>
+        <Box sx={btnContainerStyles}>
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "5.5rem",
-              height: "3.5rem",
-              borderRadius: "4px",
-              backgroundColor: themeColors.intervalBtnBackColor,
+              ...btnStyles,
               "&:hover": {
                 backgroundColor: "#1877F2",
-                cursor: "pointer",
               },
             }}
           >
-            <img
-              src={FaceBook}
-              alt="facebook"
-              style={{ width: "24px", height: "24px", color: "#313037" }}
-            />
+            <img src={FaceBook} alt="facebook" style={btnImgStyles} />
           </Box>
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "5.5rem",
-              height: "3.5rem",
-              borderRadius: "4px",
-              backgroundColor: themeColors.intervalBtnBackColor,
+              ...btnStyles,
               "&:hover": {
                 backgroundColor: "#1DA1F2",
-                cursor: "pointer",
               },
             }}
           >
-            <img
-              src={Twitter}
-              alt="Twitter"
-              style={{
-                width: "24px",
-                height: "24px",
-                color: "#313037",
-              }}
-            />
+            <img src={Twitter} alt="Twitter" style={btnImgStyles} />
           </Box>
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "5.5rem",
-              height: "3.5rem",
-              borderRadius: "4px",
-              backgroundColor: themeColors.intervalBtnBackColor,
+              ...btnStyles,
               fontSize: "40px",
               color: "#313037",
-              cursor: "pointer",
             }}
           >
             ...

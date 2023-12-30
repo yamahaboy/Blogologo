@@ -24,7 +24,7 @@ import {
   startOfYear,
   format,
 } from "date-fns";
-import useThemeColors from "../../hooks/useThemeColors";
+import useBlogologoPageStyles from "./styles";
 
 const BlogologoPage: React.FC = () => {
   const {
@@ -37,10 +37,21 @@ const BlogologoPage: React.FC = () => {
     currentPage,
     searchingDate,
   } = useAppSelector((state) => state.blogologoReducer);
+  const {
+    blogologoPageContainer,
+    pageStyles,
+    titleTabsContainer,
+    titleStyles,
+    tabsContainer,
+    articleTabStyles,
+    newsTabStyles,
+    gridContainerStyles,
+    noFindBox,
+    pasginationStyles,
+  } = useBlogologoPageStyles();
   const [sortValue, setSortValue] = useState<string>("none");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const themeColors = useThemeColors();
 
   const handleViewChange = (newView: string) => {
     dispatch(setView(newView));
@@ -116,99 +127,21 @@ const BlogologoPage: React.FC = () => {
   }, [dispatch, view, searching, sortValue, searchingDate]);
 
   return (
-    <Box
-      sx={{
-        maxWidth: "100%",
-        backgroundColor: themeColors.backgroundColor,
-        paddingTop: "72px",
-        paddingBottom: "72px",
-      }}
-    >
-      <Box
-        sx={{
-          width: "60%",
-          margin: "auto",
-          height: "auto",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "left",
-            marginBottom: "5%",
-            gap: "40px",
-            width: "100%",
-            borderBottom: !searching
-              ? `1px solid ${themeColors.borderTabsColor}`
-              : "none",
-          }}
-        >
-          <Box
-            sx={{
-              fontSize: "56px",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: "700",
-              color: themeColors.blogColor,
-            }}
-          >
+    <Box sx={blogologoPageContainer}>
+      <Box sx={pageStyles}>
+        <Box sx={titleTabsContainer}>
+          <Box sx={titleStyles}>
             {searching ? `Search Results: ${newSearch}` : "Blog"}
           </Box>
           {!searching && (
-            <Box
-              sx={{
-                width: "8.8rem",
-                height: "3rem",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
+            <Box sx={tabsContainer}>
               <Box
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  fontSize: "16px",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  color:
-                    view === "articles"
-                      ? themeColors.usedTabsColor
-                      : themeColors.unUsedTabsColor,
-                  borderBottom:
-                    view === "articles"
-                      ? `4px solid  ${themeColors.borderTabsColor} `
-                      : "none",
-                  padding: "0 40px 0 40px",
-                }}
+                sx={articleTabStyles}
                 onClick={() => handleViewChange("articles")}
               >
                 Articles
               </Box>
-              <Box
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  fontSize: "16px",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  padding: "0 40px 0 40px",
-                  color:
-                    view === "blogs"
-                      ? themeColors.usedTabsColor
-                      : themeColors.unUsedTabsColor,
-                  borderBottom:
-                    view === "blogs"
-                      ? `4px solid  ${themeColors.borderTabsColor} `
-                      : "none",
-                }}
-                onClick={() => handleViewChange("blogs")}
-              >
+              <Box sx={newsTabStyles} onClick={() => handleViewChange("blogs")}>
                 News
               </Box>
             </Box>
@@ -222,7 +155,7 @@ const BlogologoPage: React.FC = () => {
           />
         )}
         {count > 0 ? (
-          <Grid container spacing={2} sx={{ width: "100%" }}>
+          <Grid container spacing={2} sx={gridContainerStyles}>
             {(view === "articles" ? articles : news) &&
               (view === "articles" ? articles : news).map((item: BlogProps) => (
                 <Grid
@@ -232,7 +165,7 @@ const BlogologoPage: React.FC = () => {
                   sm={6}
                   md={5}
                   lg={4}
-                  sx={{ marginBottom: "40px", width: "33%" }}
+                  sx={{ marginBottom: "40px", width: "100%" }}
                 >
                   <ArticlesCard
                     props={item}
@@ -242,32 +175,10 @@ const BlogologoPage: React.FC = () => {
               ))}
           </Grid>
         ) : (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              fontSize: "16px",
-              height: "52vh",
-              fontFamily: "Inter, sans-serif",
-              fontWeight: "600",
-              color: "#777",
-              textAlign: "center",
-              margin: "auto",
-              marginTop: "20px",
-            }}
-          >
-            No results found.
-          </Box>
+          <Box sx={noFindBox}>No results found.</Box>
         )}
         {count > 0 && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
+          <Box sx={pasginationStyles}>
             <PaginationComponent />
           </Box>
         )}

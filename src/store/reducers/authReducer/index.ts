@@ -1,12 +1,12 @@
 import { Reducer } from "redux";
 import { AuthReducerEnum } from "./actionTypes";
 import { AnyAction } from "../../../models/BlogologoProps";
-import { Label, SignIn, SignUp } from "../../../models/authProps";
+import { LabelProps, SignInProps, SignUpProps } from "../../../models/authProps";
 
 type AuthReducerType = {
-  singUp: SignUp[];
-  singIn: SignIn | null;
-  user: Label | null;
+  singUp: SignUpProps[];
+  singIn: SignInProps | null;
+  user: LabelProps | null;
 };
 
 const defaulState: AuthReducerType = {

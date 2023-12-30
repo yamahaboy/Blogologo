@@ -1,13 +1,17 @@
 import React, { useContext } from "react";
 import { Box } from "@mui/material";
-import useThemeColors from "../../hooks/useThemeColors";
 import { ThemeContext, ThemeEnum } from "../../store/context/ThemeContext";
 import { IOSSwitch } from "./Switch/Switch";
+import useFooterStyles from "./styles";
 
 const Footer: React.FC = () => {
   const { theme, setTheme } = useContext(ThemeContext);
-  const themeColors = useThemeColors();
-
+  const {
+    footerContainerStyles,
+    footerStyles,
+    textStyles,
+    switchContainerStyles,
+  } = useFooterStyles();
   const handleThemeToggle = () => {
     setTheme((prevTheme) =>
       prevTheme === ThemeEnum.light ? ThemeEnum.dark : ThemeEnum.light
@@ -15,49 +19,11 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{ maxWidth: "100%", backgroundColor: themeColors.backgroundColor }}
-    >
-      <Box
-        sx={{
-          width: "60%",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          margin: "auto",
-          borderTop: `1px solid ${themeColors.intervalBtnBackColor}`,
-          height: "6rem",
-        }}
-      >
-        <Box
-          sx={{
-            fontWeight: "400",
-            fontFamily: "Inter, sans-serif",
-            fontSize: "16px",
-            color: themeColors.footerTextColor,
-          }}
-        >
-          ©2022 Blogolog
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "20px",
-          }}
-        >
-          <Box
-            sx={{
-              fontWeight: "400",
-              fontFamily: "Inter, sans-serif",
-              fontSize: "16px",
-              color: themeColors.footerTextColor,
-            }}
-          >
-            Dark theme
-          </Box>
+    <Box sx={footerContainerStyles}>
+      <Box sx={footerStyles}>
+        <Box sx={textStyles}>©2022 Blogolog</Box>
+        <Box sx={switchContainerStyles}>
+          <Box sx={textStyles}>Dark theme</Box>
           <IOSSwitch
             checked={theme === ThemeEnum.dark}
             onChange={handleThemeToggle}

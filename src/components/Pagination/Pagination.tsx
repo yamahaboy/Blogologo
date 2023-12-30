@@ -14,6 +14,7 @@ import {
 } from "../../store/reducers/blogologoReducer/actions";
 import useThemeColors from "../../hooks/useThemeColors";
 import { activePurple, hoverPurple } from "../../styles/colorConstants";
+import { useMediaQuery } from "@mui/material";
 
 const PaginationComponent: React.FC = () => {
   const {
@@ -29,6 +30,7 @@ const PaginationComponent: React.FC = () => {
   } = useAppSelector((state) => state.blogologoReducer);
   const dispatch = useAppDispatch();
   const themeColors = useThemeColors();
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -69,7 +71,7 @@ const PaginationComponent: React.FC = () => {
           "& .MuiPaginationItem-root": {
             borderRadius: "50%",
             color: themeColors.paginationColor,
-            fontSize: "16px",
+            fontSize: isSmallScreen ? "14px" : "16px",
             backgroundColor: "transparent",
             fontWeight: "500",
             fontFamily: "Inter, sans-serif",
