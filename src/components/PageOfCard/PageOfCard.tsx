@@ -11,7 +11,7 @@ import {
   getSelectedPostFromStore,
   setSelectedCard,
 } from "../../store/reducers/blogologoReducer/actions";
-import ArticlesCard from "../ArticlesCard/ArticlesCard";
+import ArticlesCard from "../Card/Card";
 import { BlogProps } from "../../models/BlogologoProps";
 import { routeLocationsEnum } from "../../Router/Router";
 import useThemeColors from "../../hooks/useThemeColors";

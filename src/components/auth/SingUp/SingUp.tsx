@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Formik, Field, Form, ErrorMessage, useFormik } from "formik";
-import * as Yup from "yup";
+import * as Yup from "Yup";
 import { useAppDispatch } from "../../../store/store";
 import { useNavigate } from "react-router-dom";
 import { routeLocationsEnum } from "../../../Router/Router";
@@ -9,7 +9,7 @@ import {
   setSingUp,
 } from "../../../store/reducers/authReducer/actions";
 import { Box, Button, TextField } from "@mui/material";
-import { SingUp } from "../../../models/authProps";
+import { SignUp } from "../../../models/authProps";
 import useAuth from "../../../hooks/useAuth";
 import useThemeColors from "../../../hooks/useThemeColors";
 
@@ -38,14 +38,14 @@ const SignUp: React.FC = () => {
       .required(),
   });
 
-  const intialFormikValues: SingUp = {
+  const intialFormikValues: SignUp = {
     name: "",
     surname: "",
     email: "",
     password: "",
   };
 
-  const handleSubmit = (formikValues: SingUp) => {
+  const handleSubmit = (formikValues: SignUp) => {
     const { isSuccess, error } = signUp({
       name: formikValues.name,
       surname: formikValues.surname,

@@ -52,9 +52,4 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
     transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
       border 300ms cubic-bezier(0.4, 0, 0.2, 1);
   }
-
-  .checked {
-  }
-  .focusVisible {
-  }
 `;

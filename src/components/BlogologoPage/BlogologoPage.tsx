@@ -11,7 +11,7 @@ import {
   setSelectedCard,
   setView,
 } from "../../store/reducers/blogologoReducer/actions";
-import ArticlesCard from "../ArticlesCard/ArticlesCard";
+import ArticlesCard from "../Card/Card";
 import PaginationComponent from "../Pagination/Pagination";
 import { BlogProps } from "../../models/BlogologoProps";
 import { useNavigate } from "react-router-dom";

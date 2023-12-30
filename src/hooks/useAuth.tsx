@@ -1,7 +1,10 @@
 import md5 from "md5";
-import { SingIn, SingUp, User } from "../models/authProps";
+import { Label, SignIn, SignUp, User } from "../models/authProps";
 import { useAppDispatch } from "../store/store";
-import { setSingUp } from "../store/reducers/authReducer/actions";
+import {
+  setNameSurname,
+  setSingUp,
+} from "../store/reducers/authReducer/actions";
 
 type AuthMethodsReturnType = {
   isSuccess: boolean;
@@ -9,12 +12,12 @@ type AuthMethodsReturnType = {
 };
 
 const useAuth = () => {
-  const authUsers: SingUp[] = JSON.parse(
+  const authUsers: SignUp[] = JSON.parse(
     localStorage.getItem("allUsers") || "[]"
   );
   const dispatch = useAppDispatch();
 
-  const signUp = (data: SingUp): AuthMethodsReturnType => {
+  const signUp = (data: SignUp): AuthMethodsReturnType => {
     const dataHash: User = {
       id: md5(data.password).concat(Date.now().toString()),
       name: data.name,
@@ -33,7 +36,7 @@ const useAuth = () => {
     return { isSuccess: true };
   };
 
-  const signIn = (data: SingIn): AuthMethodsReturnType => {
+  const signIn = (data: SignIn): AuthMethodsReturnType => {
     const foundUserFromStorage = authUsers.find(
       (user): user is User => user.email === data.email
     );
@@ -48,6 +51,11 @@ const useAuth = () => {
           password: md5(data.password),
         };
         dispatch(setSingUp(userData));
+        const userLabel: Label = {
+          name: userData.name,
+          surname: userData.surname,
+        };
+        dispatch(setNameSurname(userLabel));
         return { isSuccess: true };
       } else {
         return { isSuccess: false, error: "* Password isn't correct" };

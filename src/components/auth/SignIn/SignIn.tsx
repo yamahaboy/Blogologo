@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form, ErrorMessage, useFormik, Field } from "formik";
-import * as Yup from "yup";
-import { useAppDispatch, useAppSelector } from "../../../store/store";
+import * as Yup from "Yup";
+import { useAppDispatch } from "../../../store/store";
 import {
   setNameSurname,
   setSingIn,
@@ -10,11 +10,10 @@ import { useNavigate } from "react-router-dom";
 import { routeLocationsEnum } from "../../../Router/Router";
 import { Box, Button, TextField } from "@mui/material";
 import useAuth from "../../../hooks/useAuth";
-import { Label, SingIn } from "../../../models/authProps";
+import { SignIn } from "../../../models/authProps";
 import useThemeColors from "../../../hooks/useThemeColors";
 
 const SignIn: React.FC = () => {
-  const { singUp } = useAppSelector((state) => state.authReducer);
   const themeColors = useThemeColors();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -30,12 +29,12 @@ const SignIn: React.FC = () => {
     password: Yup.string().required(),
   });
 
-  const intialFormikValues: SingIn = {
+  const intialFormikValues: SignIn = {
     email: "",
     password: "",
   };
 
-  const handleSubmit = (formikValues: SingIn) => {
+  const handleSubmit = (formikValues: SignIn) => {
     const { isSuccess, error } = signIn({
       email: formikValues.email,
       password: formikValues.password,
@@ -49,18 +48,6 @@ const SignIn: React.FC = () => {
     if (isSuccess) {
       formik.resetForm();
       dispatch(setSingIn(formikValues));
-      const foundUser = singUp.find(
-        (user) => user.email === formikValues.email
-      );
-      console.log(foundUser, "foundUser");
-      if (foundUser) {
-        const userLabel: Label = {
-          name: foundUser.name,
-          surname: foundUser.surname,
-        };
-
-        dispatch(setNameSurname(userLabel));
-      }
       navigate(routeLocationsEnum.mainPage);
     }
   };

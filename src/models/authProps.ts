@@ -1,11 +1,11 @@
-export type SingUp = {
+export type SignUp = {
   email: string;
   password: string;
   name: string;
   surname: string;
 };
 
-export type SingIn = {
+export type SignIn = {
   email: string;
   password: string;
 };
