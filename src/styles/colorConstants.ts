@@ -10,3 +10,4 @@ export const white50 = "#FFFFFF80";
 export const white10 = "#FFFFFF1A";
 export const black = "#000";
 export const gray = "#777";
+export const headerDarkStyle = "#45444B";

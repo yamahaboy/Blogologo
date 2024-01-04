@@ -4,6 +4,7 @@ import {
   darkBackGround10,
   dateInCard50,
   gray,
+  headerDarkStyle,
   lightBackGround,
   titleColor,
   white,
@@ -59,7 +60,7 @@ export const colors: ThemeVariant = {
   },
   dark: {
     backgroundColor: darkBackGround,
-    headerColor: gray,
+    headerColor: headerDarkStyle,
     leftBorder: darkBackGround,
     searchBtnColor: white,
     userColor: white,

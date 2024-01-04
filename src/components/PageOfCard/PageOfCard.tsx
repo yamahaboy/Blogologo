@@ -53,6 +53,7 @@ const PageOfCard: React.FC = () => {
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: false,
+    swipe: true,
   };
 
   useEffect(() => {

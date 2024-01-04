@@ -2,6 +2,9 @@ import { BrowserRouter } from "react-router-dom";
 import RouterRoutes from "./RouterRoutes";
 import { Suspense, lazy } from "react";
 
+const Header = lazy(() => import("../components/Header/Header"));
+const Footer = lazy(() => import("../components/Footer/Footer"));
+
 export enum routeLocationsEnum {
   mainPage = "/",
   postPage = "/postPage",
@@ -10,8 +13,6 @@ export enum routeLocationsEnum {
 }
 
 const Router: React.FC = () => {
-  const Header = lazy(() => import("../components/Header/Header"));
-  const Footer = lazy(() => import("../components/Footer/Footer"));
   return (
     <BrowserRouter>
       <Suspense>

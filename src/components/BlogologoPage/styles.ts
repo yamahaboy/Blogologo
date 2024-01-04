@@ -81,7 +81,7 @@ const useBlogologoPageStyles = () => {
     },
     gridContainerStyles: {
       display: "flex",
-      justifyContent: isSmallScreen ? "center" : "space-between",
+      justifyContent: isSmallScreen ? "space-between" : "flex-start",
       width: "100%",
       margin: "auto",
     },

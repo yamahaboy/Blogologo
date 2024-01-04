@@ -68,7 +68,7 @@ const useAuth = () => {
     }
     return {
       isSuccess: false,
-      error: "* Account with this Email already exist",
+      error: "* Account with this Email doesn`t exist",
     };
   };
   return { signIn, signUp };
